@@ -9,4 +9,4 @@ const taskSchema = mongoose.Schema({
   cardsGroups: { type: Array, required: false },
 });
 
-module.exports = mongoose.model("Task", taskSchema);
+module.exports = mongoose.model("User", taskSchema);
