@@ -7,4 +7,4 @@ const cardsGroupSchema = mongoose.Schema({
   id: { type: String, required: true, min: 7 },
 });
 
-module.exports = mongoose.model("CardsGroup", cardsGroupSchema);
+module.exports = mongoose.model("Group", cardsGroupSchema);

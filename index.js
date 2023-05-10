@@ -2,12 +2,11 @@ const express = require("express");
 const app = express();
 var cors = require("cors");
 const bodyParser = require("body-parser");
-const summaryCardRouter = require("./routes/summaryCard");
-const cardGroupRouter = require("./routes/cardsGroup");
+const summaryCardRouter = require("./routes/summary");
+const cardGroupRouter = require("./routes/group");
 const user = require("./routes/user");
-
+require("dotenv").config();
 const mongoose = require("mongoose");
-
 app.use(cors());
 
 app.use(bodyParser.urlencoded({ extended: false }));
@@ -18,9 +17,7 @@ app.use(cardGroupRouter);
 app.use(user);
 
 mongoose
-  .connect(
-    "mongodb+srv://robertas1:robertas1@cluster0.y8jgwtj.mongodb.net/test"
-  )
+  .connect(process.env.MONGO_CONNECT)
   .then(() => {
     console.log("CONNECTED");
   })
@@ -28,6 +25,6 @@ mongoose
     console.log("err", err);
   });
 
-app.listen(8081, () => {
+app.listen(process.env.PORT, () => {
   console.log("Your app is alive!!!!!");
 });
