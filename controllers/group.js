@@ -1,25 +1,39 @@
 const uniqid = require("uniqid");
 const CardGroupModel = require("../models/group");
 const UserModel = require("../models/user");
+const jwt = require("jsonwebtoken");
 
 module.exports.INSERT_GROUP = async (req, res) => {
-  const group = new CardGroupModel({
-    title: req.body.title,
-    creationDate: new Date(),
-    summaryCardIds: [],
-    id: uniqid(),
-  });
+  try {
+    const token = req.headers.authorization;
 
-  const createdGroup = await group.save();
+    console.log("token", token);
 
-  console.log("req.body.userId", req.body.userId);
+    jwt.verify(token, process.env.JWT_SECRET, async (err, decoded) => {
+      if (err) {
+        return res.status(401).json({ response: "Auth failed" });
+      }
 
-  UserModel.updateOne(
-    { id: req.body.userId },
-    { $push: { cardsGroups: createdGroup.id } }
-  ).exec();
+      const group = new CardGroupModel({
+        title: req.body.title,
+        creationDate: new Date(),
+        summaryCardIds: [],
+        id: uniqid(),
+      });
 
-  res.status(200).json({ response: "Group was created" });
+      const createdGroup = await group.save();
+
+      UserModel.updateOne(
+        { id: req.body.userId },
+        { $push: { cardsGroups: createdGroup.id } }
+      ).exec();
+
+      return res.status(200).json({ response: "Group was created" });
+    });
+  } catch (err) {
+    console.log("err", err);
+    return res.status(500).json({ response: "ERROR" });
+  }
 };
 
 module.exports.GET_ALL_GROUPS = async (req, res) => {
