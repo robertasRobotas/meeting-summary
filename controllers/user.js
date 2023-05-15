@@ -79,6 +79,27 @@ module.exports.GET_USER_BY_ID = async (req, res) => {
   }
 };
 
+module.exports.GET_ALL_GROUPS_BY_USER_ID = async (req, res) => {
+  try {
+    const aggregatedUserData = await UserModel.aggregate([
+      {
+        $lookup: {
+          from: "groups",
+          localField: "cardsGroups",
+          foreignField: "id",
+          as: "user_groups",
+        },
+      },
+      { $match: { id: req.body.userId } },
+    ]).exec();
+
+    res.status(200).json({ user: aggregatedUserData });
+  } catch (err) {
+    console.log("ERR", err);
+    res.status(500).json({ response: "ERROR, please try later" });
+  }
+};
+
 module.exports.DELETE_USER_BY_ID = async (req, res) => {
   try {
     const user = await UserModel.deleteOne({ id: req.params.id });
