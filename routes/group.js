@@ -9,7 +9,7 @@ const {
 } = require("../controllers/group");
 
 router.post("/group", authMiddleware, INSERT_GROUP);
-router.get("/groups", authMiddleware, GET_ALL_GROUPS);
+// router.get("/groups", authMiddleware, GET_ALL_GROUPS);
 router.get("/group/:id", authMiddleware, GET_GROUP_BY_ID);
 router.delete("/group/:id", authMiddleware, DELETE_GROUP_BY_ID);
 
