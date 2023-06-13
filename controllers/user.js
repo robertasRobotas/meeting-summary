@@ -25,7 +25,9 @@ module.exports.LOGIN = async (req, res) => {
           }
         );
 
-        return res.status(200).json({ response: "You logged in", jwt: token });
+        return res
+          .status(200)
+          .json({ response: "You logged in", jwt: token, userId: user.id });
       } else {
         return res.status(401).json({ response: "Bad data" });
       }
@@ -93,7 +95,7 @@ module.exports.GET_ALL_GROUPS_BY_USER_ID = async (req, res) => {
       { $match: { id: req.body.userId } },
     ]).exec();
 
-    res.status(200).json({ user: aggregatedUserData });
+    res.status(200).json({ user: aggregatedUserData[0] });
   } catch (err) {
     console.log("ERR", err);
     res.status(500).json({ response: "ERROR, please try later" });
